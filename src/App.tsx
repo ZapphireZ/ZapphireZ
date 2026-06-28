@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-// Simulated form submission for static site (replaces TanStack Start createServerFn)
+// Contact form submission via API endpoint
 async function submitContactForm(data: { name: string; email: string; message: string }) {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1200));
-  console.log("[Contact Submission]", {
-    ...data,
-    timestamp: new Date().toISOString(),
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
-  return {
-    success: true,
-    message: "Thanks for reaching out! We'll get back to you within 24 hours.",
-  };
+  if (!res.ok) throw new Error("Failed to send message. Please try again.");
+  return res.json();
 }
 
 const NAV_LINKS = [
