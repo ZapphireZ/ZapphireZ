@@ -1,34 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 
-const submitContactForm = createServerFn({ method: "POST" })
-  .validator((data: unknown) => {
-    const d = data as { name?: string; email?: string; message?: string };
-    if (!d.name?.trim() || !d.email?.trim() || !d.message?.trim()) {
-      throw new Error("All fields are required");
-    }
-    return { name: d.name.trim(), email: d.email.trim(), message: d.message.trim() };
-  })
-  .handler(async ({ data }) => {
-    // Log the submission for now
-    console.log("[Contact Submission]", {
-      name: data.name,
-      email: data.email,
-      message: data.message,
-      timestamp: new Date().toISOString(),
-    });
-
-    // In the future, this is where we'd send an email
-    return {
-      success: true,
-      message: "Thanks for reaching out! We'll get back to you within 24 hours.",
-    };
+// Simulated form submission for static site (replaces TanStack Start createServerFn)
+async function submitContactForm(data: { name: string; email: string; message: string }) {
+  // Simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  console.log("[Contact Submission]", {
+    ...data,
+    timestamp: new Date().toISOString(),
   });
-
-export const Route = createFileRoute("/")({
-  component: Home,
-});
+  return {
+    success: true,
+    message: "Thanks for reaching out! We'll get back to you within 24 hours.",
+  };
+}
 
 const NAV_LINKS = [
   { label: "Services", href: "#services" },
@@ -414,7 +398,7 @@ function TestimonialsSection() {
         </ScrollReveal>
 
         <div className="grid gap-8 md:grid-cols-2">
-          {TESTIMONIALS.map((t, i) => (
+          {TESTIMONIALS.map((t) => (
             <ScrollReveal key={t.name}>
               <div className="group rounded-2xl border border-white/10 bg-dark-800 p-8 transition-all duration-300 hover:border-orange-500/30">
                 <div className="mb-4 flex items-center gap-4">
@@ -549,7 +533,7 @@ function PricingSection() {
         </ScrollReveal>
 
         <div className="grid gap-8 lg:grid-cols-3">
-          {PRICING_PLANS.map((plan, i) => (
+          {PRICING_PLANS.map((plan) => (
             <ScrollReveal key={plan.name}>
               <div
                 className={`relative overflow-hidden rounded-2xl border p-8 transition-all duration-300 ${
@@ -623,7 +607,7 @@ function ContactSection() {
     setErrorMsg("");
 
     try {
-      const result = await submitContactForm({ data: { name, email, message } });
+      const result = await submitContactForm({ name, email, message });
       if (result.success) {
         setStatus("success");
         setName("");
@@ -825,17 +809,25 @@ function FooterSection() {
   );
 }
 
-function Home() {
+export default function App() {
   return (
-    <main>
-      <NavBar />
-      <HeroSection />
-      <ServicesSection />
-      <TestimonialsSection />
-      <BeforeAfterSection />
-      <PricingSection />
-      <ContactSection />
-      <FooterSection />
-    </main>
+    <html lang="en" className="dark">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <main>
+          <NavBar />
+          <HeroSection />
+          <ServicesSection />
+          <TestimonialsSection />
+          <BeforeAfterSection />
+          <PricingSection />
+          <ContactSection />
+          <FooterSection />
+        </main>
+      </body>
+    </html>
   );
 }
