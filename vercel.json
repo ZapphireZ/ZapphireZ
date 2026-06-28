@@ -1,12 +1,6 @@
 {
   "buildCommand": "bun run build",
   "outputDirectory": "dist/client",
-  "installCommand": "bun install",
-  "framework": "tanstack-start",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ]
+  "framework": null,
+  "installCommand": "bun install"
 }
